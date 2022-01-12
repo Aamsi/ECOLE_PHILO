@@ -6,7 +6,7 @@
 #    By: iouali <iouali@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/01/08 13:52:00 by iouali            #+#    #+#              #
-#    Updated: 2022/01/10 16:37:41 by iouali           ###   ########.fr        #
+#    Updated: 2022/01/12 20:04:25 by iouali           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,17 +16,18 @@ SRCS		= ${SRCFOLD}main.c \
 				${SRCFOLD}init.c \
 				${SRCFOLD}life.c \
 				${SRCFOLD}utils.c \
-				${SRCFOLD}debug.c
+				${SRCFOLD}debug.c \
+				${SRCFOLD}clear.c
 
 OBJS		= ${SRCS:.c=.o}
 
 NAME		= philo
 
-CC			= @clang
+CC			= gcc
 
-CFLAGS		= -Wall -Wextra -Werror
+CFLAGS		=
 
-RM			= @rm -f
+RM			= rm -f
 
 %.o: %.c
 	${CC} ${CFLAGS} -Iincludes -c $< -o ${<:.c=.o}

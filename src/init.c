@@ -6,7 +6,7 @@
 /*   By: iouali <iouali@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/09 13:39:05 by iouali            #+#    #+#             */
-/*   Updated: 2022/01/10 18:55:30 by iouali           ###   ########.fr       */
+/*   Updated: 2022/01/12 21:01:42 by iouali           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,11 +21,13 @@ t_philo	*init_philos(int argc, char **argv)
 	philos = ft_calloc(sizeof(t_philo), ft_atoi(argv[1]));
 	if (!philos)
 		return (NULL);
-	control.done = 0;
+	g_done = 0;
+	pthread_mutex_init(&g_can_write, NULL);
 	i = 0;
 	while (i < ft_atoi(argv[1]))
 	{
 		pthread_mutex_init(&philos[i].fork, NULL);
+		pthread_mutex_init(&philos[i].is_eating, NULL);
 		philos[i].control = &control;
 		philos[i].id = i;
 		philos[i].time_start = get_time();
@@ -42,6 +44,6 @@ t_philo	*init_philos(int argc, char **argv)
 		philos[i].time_to_sleep = ft_atoi(argv[4]);
 		i++;
 	}
-	philos[0].prev_fork = &philos[i - 1].fork;
+	philos[0].prev_fork = &(philos[i - 1].fork);
 	return (philos);
 }

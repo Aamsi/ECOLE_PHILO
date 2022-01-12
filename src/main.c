@@ -6,7 +6,7 @@
 /*   By: iouali <iouali@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/08 14:01:10 by iouali            #+#    #+#             */
-/*   Updated: 2022/01/10 19:19:16 by iouali           ###   ########.fr       */
+/*   Updated: 2022/01/12 21:05:33 by iouali           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,16 +18,18 @@ void	*thread(void *philo)
 	pthread_t	dead_thread;
 
 	philos = (t_philo *) philo;
-	usleep(100);
 	pthread_create(&dead_thread, NULL, &check_died, philos);
-	while (philos->control->done == 0)
+	if (philos->id % 2 == 0)
+		usleep(200);
+	while (g_done == 0)
 	{
 		take_forks(philos);
-		put_down_forks(philos);
 		take_meal(philos);
+		put_down_forks(philos);
 		take_sleep(philos);
 		put_message(philos->id, philos->time_start, "is thinking.", philo);
 	}
+	pthread_join(dead_thread, NULL);
 	return (NULL);
 }
 
@@ -35,22 +37,16 @@ void	philo_threads(t_philo *philos)
 {
 	int				i;
 	pthread_t		philo_thread;
-	pthread_mutex_t	is_eating;
-	pthread_mutex_t	can_write;
 
-	pthread_mutex_init(&is_eating, NULL);
-	pthread_mutex_init(&can_write, NULL);
 	i = 0;
 	while (i < philos[0].nb_of_philos)
 	{
-		philos[i].can_write = can_write;
-		philos[i].is_eating = is_eating;
 		pthread_create(&philo_thread, NULL, &thread, &philos[i]);
-		usleep(35);
+		usleep(50);
 		i++;
 	}
-	if (philos[0].nb_of_philos > 1)
-		pthread_join(philo_thread, NULL);
+	pthread_join(philo_thread, NULL);
+	clear_mutex(philos);
 }
 
 int main(int argc, char **argv)

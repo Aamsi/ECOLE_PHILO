@@ -6,7 +6,7 @@
 /*   By: iouali <iouali@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/09 12:39:45 by iouali            #+#    #+#             */
-/*   Updated: 2022/01/10 19:07:03 by iouali           ###   ########.fr       */
+/*   Updated: 2022/01/12 21:05:59 by iouali           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,19 +27,21 @@ void	custom_sleep(int time)
 
 	time_now = get_time();
 	while (get_time() < time_now + time)
-		usleep(time);
+		usleep(1);
 }
 
 void	put_message(int id, long time_start, char *message, t_philo *philo)
 {
 	long	time_delta;
 
-	if (philo->control->done == 1)
+	if (g_done == 1)
+	{
+		pthread_mutex_unlock(&g_can_write);
 		return ;
-	pthread_mutex_lock(&philo->can_write);
+	}
 	time_delta = get_time() - time_start;
 	printf("%ld ms - Philo %d %s\n", time_delta, id + 1, message);
-	pthread_mutex_unlock(&philo->can_write);
+	pthread_mutex_unlock(&g_can_write);
 }
 
 static int	is_space(char c)
