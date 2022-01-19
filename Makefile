@@ -6,7 +6,7 @@
 #    By: iouali <iouali@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/01/08 13:52:00 by iouali            #+#    #+#              #
-#    Updated: 2022/01/12 20:04:25 by iouali           ###   ########.fr        #
+#    Updated: 2022/01/19 19:46:29 by iouali           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,9 +23,9 @@ OBJS		= ${SRCS:.c=.o}
 
 NAME		= philo
 
-CC			= gcc
+CC			= clang
 
-CFLAGS		=
+CFLAGS		= -pthread -g3 -fsanitize=thread
 
 RM			= rm -f
 
@@ -33,7 +33,7 @@ RM			= rm -f
 	${CC} ${CFLAGS} -Iincludes -c $< -o ${<:.c=.o}
 
 ${NAME}:		 ${OBJS}
-	@${CC} ${CFLAGS} ${OBJS} -L/usr/lib -lpthread -o ${NAME}
+	@${CC} ${CFLAGS} ${OBJS} -pthread -o ${NAME}
 
 all:			${NAME}
 

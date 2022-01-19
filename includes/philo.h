@@ -6,7 +6,7 @@
 /*   By: iouali <iouali@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/08 13:56:39 by iouali            #+#    #+#             */
-/*   Updated: 2022/01/12 21:01:32 by iouali           ###   ########.fr       */
+/*   Updated: 2022/01/19 19:18:01 by iouali           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,9 +19,6 @@
 # include <sys/time.h>
 # include <stdlib.h>
 
-
-int	g_done;
-pthread_mutex_t g_can_write;
 
 typedef struct s_control
 {
@@ -41,6 +38,8 @@ typedef struct s_philo
     pthread_mutex_t	*prev_fork;
     pthread_mutex_t is_eating;
     pthread_mutex_t	fork;
+    pthread_mutex_t *lock;
+    pthread_mutex_t *can_write;
     t_control       *control;
 }               t_philo;
 

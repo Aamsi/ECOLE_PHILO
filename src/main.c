@@ -6,7 +6,7 @@
 /*   By: iouali <iouali@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/08 14:01:10 by iouali            #+#    #+#             */
-/*   Updated: 2022/01/12 21:05:33 by iouali           ###   ########.fr       */
+/*   Updated: 2022/01/19 19:51:35 by iouali           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,9 +19,10 @@ void	*thread(void *philo)
 
 	philos = (t_philo *) philo;
 	pthread_create(&dead_thread, NULL, &check_died, philos);
+	pthread_detach(dead_thread);
 	if (philos->id % 2 == 0)
-		usleep(200);
-	while (g_done == 0)
+		custom_sleep(100);
+	while (1)
 	{
 		take_forks(philos);
 		take_meal(philos);
@@ -29,7 +30,6 @@ void	*thread(void *philo)
 		take_sleep(philos);
 		put_message(philos->id, philos->time_start, "is thinking.", philo);
 	}
-	pthread_join(dead_thread, NULL);
 	return (NULL);
 }
 
@@ -37,15 +37,24 @@ void	philo_threads(t_philo *philos)
 {
 	int				i;
 	pthread_t		philo_thread;
+	pthread_mutex_t	lock;
+	pthread_mutex_t can_write;
 
+	pthread_mutex_init(&lock, NULL);
+	pthread_mutex_init(&can_write, NULL);
+	pthread_mutex_lock(&lock);
 	i = 0;
 	while (i < philos[0].nb_of_philos)
 	{
+		philos[i].lock = &lock;
+		philos[i].can_write = &can_write;
 		pthread_create(&philo_thread, NULL, &thread, &philos[i]);
-		usleep(50);
+		pthread_detach(philo_thread);
+		custom_sleep(15);
 		i++;
 	}
-	pthread_join(philo_thread, NULL);
+	pthread_mutex_lock(&lock);
+	free(philos);
 	clear_mutex(philos);
 }
 

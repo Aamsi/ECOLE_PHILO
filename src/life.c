@@ -6,7 +6,7 @@
 /*   By: iouali <iouali@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/09 14:19:18 by iouali            #+#    #+#             */
-/*   Updated: 2022/01/12 21:04:17 by iouali           ###   ########.fr       */
+/*   Updated: 2022/01/19 19:45:15 by iouali           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,17 +49,16 @@ void	*check_died(void *philo)
 	while (1)
 	{
 		pthread_mutex_lock(&philos->is_eating);
-		// printf("limit : %ld\n", get_time() - philos->last_meal_time);
 		if (get_time() - philos->last_meal_time > philos->time_to_die)
 		{
-			pthread_mutex_lock(&g_can_write);
 			put_message(philos->id, philos->time_start, "died.", philo);
+			pthread_mutex_lock(philos->can_write);
+			pthread_mutex_unlock(philos->lock);
 			pthread_mutex_unlock(&philos->is_eating);
-			g_done = 1;
 			return (NULL);
 		}
 		pthread_mutex_unlock(&philos->is_eating);
-		// custom_sleep(100);
+		custom_sleep(50);
 	}
 	return (NULL);
 }
